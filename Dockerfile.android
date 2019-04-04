@@ -94,14 +94,11 @@ RUN mkdir /android_sdk && \
     rm -rf tools_r25.2.5-linux.zip
 
 # Get the actual sdk and build tools of the appropriate version 
-RUN num=`/android_sdk/tools/android list sdk --all | grep "Android SDK Build-tools, revision 27.0.3" | awk '{print $1}' | sed -e "s/-//"` && \
-    sh -c "/bin/echo -e 'y' | /android_sdk/tools/android update sdk -s -u -a -t $num"
+RUN sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'build-tools;27.0.3'"
 
-RUN num=`/android_sdk/tools/android list sdk --all | grep "SDK Platform Android 8.0.0, API 26, revision 2" | awk '{print $1}' | sed -e "s/-//"` &&  \
-    sh -c "/bin/echo -e 'y' | /android_sdk/tools/android update sdk -s -u -a -t $num"
+RUN sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'platforms;android-26'"
 
-RUN num=`/android_sdk/tools/android list sdk --all | grep "Android SDK Platform-tools, revision 28.0.2" | awk '{print $1}' | sed -e "s/-//"` &&  \
-    sh -c "/bin/echo -e 'y' | /android_sdk/tools/android update sdk -s -u -a -t $num"
+RUN sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'platform-tools'"
 
 RUN mkdir /android_ndk && \
     cd /android_ndk && \
