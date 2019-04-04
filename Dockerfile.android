@@ -35,7 +35,7 @@ RUN apt-get -y update && \
         libv4l-dev \
         openjdk-8-jdk \
         expect \
-        tzdata
+        tzdata \
     && \
 
 # install python dependencies
@@ -55,7 +55,6 @@ RUN apt-get -y update && \
     mv /opencv_contrib-$OPENCV_VERSION /opencv_contrib && \
     rm opencv_contrib3.zip 
 
-
 # Prepare build
 RUN    mkdir /opencv/build && cd /opencv/build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
@@ -70,13 +69,11 @@ RUN    mkdir /opencv/build && cd /opencv/build && \
       -D WITH_FFMPEG=ON \
       -D WITH_V4L=ON ..
 
-
 # Install
 RUN    cd /opencv/build && \
     make -j$(nproc) && \
     make install && \
     ldconfig
-
 
 # Set correct gcc version
 RUN   apt-get install -y software-properties-common && \
