@@ -81,49 +81,48 @@ RUN    cd /opencv/build && \
     rm -rf /opencv/build
 
 # Set correct gcc version
-RUN   apt-get -y update && \
-      apt-get install --no-install-recommends -y software-properties-common && \
-      add-apt-repository ppa:ubuntu-toolchain-r/test && \
-      apt-get -y update && \
-      apt-get install -y gcc-7 g++-7 && \
-      rm /usr/bin/gcc /usr/bin/g++ && \
-      ln -s /usr/bin/gcc-7 /usr/bin/gcc && \
-      ln -s /usr/bin/g++-7 /usr/bin/g++ && \
-      apt-get autoremove -y && \
-      apt-get clean && \
-      rm -rf /var/lib/apt/lists/*
-    
-# This is the android studio, which we do not want 
-# RUN wget https://dl.google.com/dl/android/studio/ide-zips/3.3.2.0/android-studio-ide-182.5314842-linux.zip
-RUN mkdir /android_sdk && \
+RUN  apt-get -y update && \
+     apt-get install --no-install-recommends -y software-properties-common && \
+     add-apt-repository ppa:ubuntu-toolchain-r/test && \
+     apt-get -y update && \
+     apt-get install -y gcc-7 g++-7 && \
+     rm /usr/bin/gcc /usr/bin/g++ && \
+     ln -s /usr/bin/gcc-7 /usr/bin/gcc && \
+     ln -s /usr/bin/g++-7 /usr/bin/g++ && \
+     apt-get autoremove -y && \
+     apt-get clean && \
+     rm -rf /var/lib/apt/lists/* && \ 
+    \    
+# Get the tools that will get the Android SDK
+    mkdir /android_sdk && \
     cd /android_sdk && \
     wget https://dl.google.com/android/repository/tools_r25.2.5-linux.zip && \
     unzip tools_r25.2.5-linux.zip && \
-    rm -rf tools_r25.2.5-linux.zip
-
+    rm -rf tools_r25.2.5-linux.zip && \
+    \
 # Get the actual sdk and build tools of the appropriate version 
-RUN sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'build-tools;27.0.3'"
-
-RUN sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'platforms;android-26'"
-
-RUN sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'platform-tools'"
-
-RUN mkdir /android_ndk && \
+    sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'build-tools;27.0.3'" && \ 
+    sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'platforms;android-26'" && \ 
+    sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'platform-tools'" && \ 
+    \ 
+# Get the native development kit
+    mkdir /android_ndk && \
     cd /android_ndk && \
     wget https://dl.google.com/android/repository/android-ndk-r14b-linux-x86_64.zip &&\
     unzip android-ndk-r14b-linux-x86_64.zip && \
-    rm -rf android-ndk-r14b-linux-x86_64.zip
-
-RUN mkdir /OpenCV-android-sdk && \
+    rm -rf android-ndk-r14b-linux-x86_64.zip && \
+    \
+# Build the OpenCV Android SDK
+    mkdir /OpenCV-android-sdk && \
     cd /OpenCV-android-sdk && \
     python /opencv/platforms/android/build_sdk.py --ndk_path=/android_ndk/android-ndk-r14b --sdk_path=/android_sdk --no_ccache --extra_modules_path=/opencv_contrib/modules/ --config=/opencv/platforms/android/ndk-16.config.py --force_copy --force_opencv_toolchain && \
  # Clean Opencv Android SDK Build
     cd /OpenCV-android-sdk && \
     mv OpenCV-android-sdk ~/ && \
-    rm -rf /OpenCV-android-sdk
-
-# Clean
-RUN apt-get -y remove \
+    rm -rf /OpenCV-android-sdk && \ 
+    \
+# Clean as much as possible 
+    apt-get -y remove \
     python3-dev \
     libatlas-base-dev \
     gfortran \
