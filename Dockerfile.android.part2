@@ -7,11 +7,11 @@ FROM cedorman/docker-python-opencv-3.4.5-ffmpeg:android.part1
 LABEL maintainer "clark.dorman@nextcentury.com"
 
 # Get the actual sdk and build tools of the appropriate version 
-RUN echo "Installing build-tools, platforms, platform-tools" && \
+RUN echo "--> Installing build-tools, platforms, platform-tools" && \
     sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager 'build-tools;27.0.3' 'platforms;android-26' 'platform-tools'" && \ 
     \ 
 # Get the native development kit
-    echo "Installing native development kit" && \ 
+    echo "--> Installing native development kit" && \ 
     mkdir /android_ndk && \
     cd /android_ndk && \
     wget https://dl.google.com/android/repository/android-ndk-r14b-linux-x86_64.zip &&\
@@ -19,7 +19,7 @@ RUN echo "Installing build-tools, platforms, platform-tools" && \
     rm -rf android-ndk-r14b-linux-x86_64.zip && \
     \
 # Build the OpenCV Android SDK
-    echo "Building opencv android sdk" && \ 
+    echo "--> Building opencv android sdk" && \ 
     mkdir /OpenCV-android-sdk && \
     cd /OpenCV-android-sdk && \
     python /opencv/platforms/android/build_sdk.py --ndk_path=/android_ndk/android-ndk-r14b --sdk_path=/android_sdk --no_ccache --extra_modules_path=/opencv_contrib/modules/ --config=/opencv/platforms/android/ndk-16.config.py --force_copy --force_opencv_toolchain && \
@@ -29,7 +29,7 @@ RUN echo "Installing build-tools, platforms, platform-tools" && \
     rm -rf /OpenCV-android-sdk && \ 
     \
 # Clean as much as possible
-    echo "Cleaning as much as possible" && \ 
+    echo "--> Cleaning as much as possible" && \ 
     apt-get -y remove \
     python3-dev \
     libatlas-base-dev \
