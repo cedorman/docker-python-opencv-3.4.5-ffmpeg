@@ -59,7 +59,7 @@ RUN apt-get -y update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Prepare build
+# Prepare opencv build
 RUN    mkdir /opencv/build && cd /opencv/build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D BUILD_PYTHON_SUPPORT=ON \
@@ -73,7 +73,7 @@ RUN    mkdir /opencv/build && cd /opencv/build && \
       -D WITH_FFMPEG=ON \
       -D WITH_V4L=ON ..
 
-# Install
+# make and Install opencv
 RUN    cd /opencv/build && \
     make -j$(nproc) && \
     make install && \
@@ -98,7 +98,7 @@ RUN  apt-get -y update && \
     cd /android_sdk && \
     wget https://dl.google.com/android/repository/tools_r25.2.5-linux.zip && \
     unzip tools_r25.2.5-linux.zip && \
-    rm -rf tools_r25.2.5-linux.zip
+    rm -rf tools_r25.2.5-linux.zip && \
     \
 # Get the actual sdk and build tools of the appropriate version 
     sh -c "/bin/echo -e 'y' | /android_sdk/tools/bin/sdkmanager --verbose 'build-tools;27.0.3'" && \ 
