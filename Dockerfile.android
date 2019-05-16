@@ -142,5 +142,9 @@ RUN  apt-get -y update && \
     apt-get clean && \
     rm -rf /opencv /opencv_contrib /var/lib/apt/lists/*
 
+
+RUN apt-get update && \
+    apt-get install -y clang-format-6.0 clang-tools-6.0
+
 # Define default command.
 CMD ["python3 --version"]
